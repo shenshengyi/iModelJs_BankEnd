@@ -22,13 +22,24 @@ import { Handle_BriefcaseDbTest } from "./IModelDbExample/BriefcaseDbTest";
 import { Handle_SnapshotDbTest } from "./IModelDbExample/SnapshotDbTest";
 import { TestAnalySis } from "./Models/AnalysisImporter";
 import { Handle_PhysicalMaterialTest } from "./Models/PhysicalMaterialTest";
+import { SnapshotDbExample_Handle } from "./DB_File/SnapshotDbExample";
 
+class MM {
+  public constructor() {
+    console.log("开始");
+  }
+  public dispose(): void {
+    console.log("结束");
+  }
+}
 async function APP() {
   // Start the backend
   await IModelHost.startup();
+  await SnapshotDbExample_Handle();
   // await Handle_StandaloneDbTest();
   //await Handle_BriefcaseDbTest();
-  await Handle_SnapshotDbTest();
+  // await Handle_SnapshotDbTest();
+
   //await TestAnalySis();
   // Handle_PhysicalMaterialTest();
   IModelHost.shutdown();

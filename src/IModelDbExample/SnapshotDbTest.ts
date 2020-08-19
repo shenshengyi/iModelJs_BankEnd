@@ -4,10 +4,6 @@ import {
   DisplayStyle3d,
   DocumentListModel,
   GenericDocument,
-  StandaloneDb,
-  SheetModel,
-  TextAnnotation2d,
-  DictionaryModel,
 } from "@bentley/imodeljs-backend";
 import {
   SpatialViewDefinitionProps,
@@ -22,14 +18,8 @@ import {
   DisplayStyleSettingsProps,
   BisCodeSpec,
   Code,
-  ElementProps,
 } from "@bentley/imodeljs-common";
-import { Element } from "@bentley/imodeljs-backend";
 import { Id64String, IModelStatus } from "@bentley/bentleyjs-core";
-import { SmoothTransformBetweenFrusta, Angle } from "@bentley/geometry-core";
-import e = require("express");
-import { SSL_OP_NO_TLSv1_2 } from "constants";
-import { stringify } from "querystring";
 class SnapshotDbTest {
   public constructor(filePath: string) {
     this._filePath = filePath;
@@ -73,7 +63,6 @@ class SnapshotDbTest {
       },
     };
 
-    const id = db.elements.insertElement(props);
     let txns = db.txns;
     txns.beginMultiTxnOperation();
     const current = txns.getCurrentTxnId();
@@ -138,7 +127,6 @@ class SnapshotDbTest {
     this._db = SnapshotDb.openFile(this._filePath);
     console.log(this._db.filePath);
 
-    const sql = "select * from bis.Model";
     const idList: string[] = [
       "0x1",
       "0xe",
@@ -241,27 +229,16 @@ class SnapshotDbTest {
       }
     }
 
-    // for (const modelId of mp.keys()) {
-    //   const m = db.models.tryGetModelProps(modelId);
-    //   console.log("model id = " + modelId + "    " + m?.classFullName);
-    //   const idList = mp.get(modelId);
-    //   for (const id of idList!) {
-    //     const e = db.elements.tryGetElementProps(id);
-    //     console.log("element id = " + id + "      " + e?.classFullName);
-    //   }
-    //   console.log("-----------------------------------------");
-    // }
-    const idL: string[] = ["0x1", "0x13", "0x1b", "0x1d", "0x20"];
-
     db.close();
   }
   private _filePath: string;
   private _db: SnapshotDb | undefined;
 }
 async function Handle_SnapshotDbTest() {
-  const filePath = "D:\\imodel-example\\backend\\data\\house.bim";
+  //const filePath = "D:\\imodel-example\\backend\\data\\house.bim";
+  const filePath = "../data/Baytown.bim";
   const test = new SnapshotDbTest(filePath);
-  // await test.QueryElement();
+  await test.QueryElement();
   await test.QueryElement3();
 }
 
