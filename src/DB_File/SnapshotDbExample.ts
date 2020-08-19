@@ -102,6 +102,7 @@ class SnapshotDbExample {
         console.log((elementProp as any).pLANT_AREA); //将输出50
       }
     }
+
     // //查询imodel 文件路径；
     // const filePath = this._imodel.filePath;
     // console.log("文件路径=" + filePath);
