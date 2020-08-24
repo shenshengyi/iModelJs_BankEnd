@@ -5,6 +5,15 @@ import {
   GeometricElement,
   GeometricModel,
   DrawingModel,
+  SpatialElement,
+  Subject,
+  SubjectOwnsSubjects,
+  InformationPartitionElement,
+  LinkModel,
+  LinkPartition,
+  DocumentPartition,
+  DocumentListModel,
+  GeometricElement3d,
 } from "@bentley/imodeljs-backend";
 import * as fs from "fs";
 import * as path from "path";
@@ -37,71 +46,102 @@ class SnapshotDbExample {
       return;
     }
     const imodel = this._imodel;
-    /* 1.查询该imodel数据文件在本地的路径;*/
-    const filePath = imodel.filePath;
-    console.log(imodel.filePath);
+    const modelIdSet = imodel.queryEntityIds({
+      from: Model.classFullName,
+    });
+    console.log("个数=" + modelIdSet.size.toString());
+    for (const id of modelIdSet.values()) {
+      const prop = imodel.elements.tryGetElementProps(id);
+      if (prop) {
+        console.log(prop);
+      }
+    }
+    // {
+    //   const modelIdSet = imodel.queryEntityIds({ from: Element.classFullName });
+    //   console.log(modelIdSet.size.toString());
+    //   for (const id of modelIdSet) {
+    //     const prop = imodel.elements.tryGetElementProps(id);
+    //     if (prop) {
+    //       if (prop.parent) {
+    //         console.log(
+    //           prop.classFullName + "-------" + prop.parent.relClassName
+    //         );
+    //       }
+    //     }
+    //   }
+    //   //   for (const modelId of modelIdSet.values()) {
+    //   //     const modelProp = imodel.models.tryGetModelProps(modelId);
+    //   //     if (modelProp != undefined) {
+    //   //       // console.log(modelProp);
+    //   //     }
+    //   //   }
+    // }
+    // console.log(imodel);
+    // /* 1.查询该imodel数据文件在本地的路径;*/
+    // const filePath = imodel.filePath;
+    // console.log(imodel.filePath);
 
-    /* 2.查询该imodel可读性*/
-    if (imodel.isReadonly) {
-      console.log("只读");
-    } else {
-      console.log("可读可写");
-    }
+    // /* 2.查询该imodel可读性*/
+    // if (imodel.isReadonly) {
+    //   console.log("只读");
+    // } else {
+    //   console.log("可读可写");
+    // }
 
-    /* 3.查询该imodel中所有的model*/
-    {
-      const modelIdSet = imodel.queryEntityIds({ from: Model.classFullName });
-      for (const modelId of modelIdSet.values()) {
-        const modelProp = imodel.models.tryGetModelProps(modelId);
-        if (modelProp != undefined) {
-          // console.log(modelProp);
-        }
-      }
-    }
-    /* 4.查询该imodel中所有的GeometricModel*/
-    {
-      const modelIdSet = imodel.queryEntityIds({
-        from: GeometricModel.classFullName,
-      });
-      for (const modelId of modelIdSet.values()) {
-        const modelProp = imodel.models.tryGetModel(modelId);
-        if (modelProp != undefined) {
-          // console.log(modelProp);
-        }
-      }
-    }
-    /* 5. 查询该imodel中所有的DrawingModel*/
-    {
-      const sql = `select * from ${DrawingModel.classFullName}`;
-      imodel.withPreparedStatement(sql, (statement: ECSqlStatement) => {
-        while (DbResult.BE_SQLITE_ROW === statement.step()) {
-          console.log(statement.getRow().id);
-        }
-      });
-    }
-    /* 6.根据已知Element Id查询其属性值。*/
-    {
-      /*
-        注:id为0x300000002f5的Element的属性如下所示:
-        {
-        classFullName: 'ProcessFunctional:SIGNALLINE',
-        code: { scope: '0x1', spec: '0x1', value: '' },
-        federationGuid: '4cc96158-0484-47dd-bffe-447c1b4e422e',
-        id: '0x300000002f5',
-        model: '0x20000000001',
-        openPlantTypeName: 'INSTLINE_ELECTRIC',
-        pLANT_AREA: '50',
-        sERVICE: 'HPS',
-        sYSTEM: 'SW',
-        uNIT: '1',
-        userLabel: 'IL'
-        }
-        */
-      const elementProp = imodel.elements.tryGetElementProps("0x300000002f5");
-      if (elementProp) {
-        console.log((elementProp as any).pLANT_AREA); //将输出50
-      }
-    }
+    // /* 3.查询该imodel中所有的model*/
+    // {
+    //   const modelIdSet = imodel.queryEntityIds({ from: Model.classFullName });
+    //   for (const modelId of modelIdSet.values()) {
+    //     const modelProp = imodel.models.tryGetModelProps(modelId);
+    //     if (modelProp != undefined) {
+    //       // console.log(modelProp);
+    //     }
+    //   }
+    // }
+    // /* 4.查询该imodel中所有的GeometricModel*/
+    // {
+    //   const modelIdSet = imodel.queryEntityIds({
+    //     from: GeometricModel.classFullName,
+    //   });
+    //   for (const modelId of modelIdSet.values()) {
+    //     const modelProp = imodel.models.tryGetModel(modelId);
+    //     if (modelProp != undefined) {
+    //       // console.log(modelProp);
+    //     }
+    //   }
+    // }
+    // /* 5. 查询该imodel中所有的DrawingModel*/
+    // {
+    //   const sql = `select * from ${DrawingModel.classFullName}`;
+    //   imodel.withPreparedStatement(sql, (statement: ECSqlStatement) => {
+    //     while (DbResult.BE_SQLITE_ROW === statement.step()) {
+    //       console.log(statement.getRow().id);
+    //     }
+    //   });
+    // }
+    // /* 6.根据已知Element Id查询其属性值。*/
+    // {
+    //   /*
+    //     注:id为0x300000002f5的Element的属性如下所示:
+    //     {
+    //     classFullName: 'ProcessFunctional:SIGNALLINE',
+    //     code: { scope: '0x1', spec: '0x1', value: '' },
+    //     federationGuid: '4cc96158-0484-47dd-bffe-447c1b4e422e',
+    //     id: '0x300000002f5',
+    //     model: '0x20000000001',
+    //     openPlantTypeName: 'INSTLINE_ELECTRIC',
+    //     pLANT_AREA: '50',
+    //     sERVICE: 'HPS',
+    //     sYSTEM: 'SW',
+    //     uNIT: '1',
+    //     userLabel: 'IL'
+    //     }
+    //     */
+    //   const elementProp = imodel.elements.tryGetElementProps("0x300000002f5");
+    //   if (elementProp) {
+    //     console.log((elementProp as any).pLANT_AREA); //将输出50
+    //   }
+    // }
 
     // //查询imodel 文件路径；
     // const filePath = this._imodel.filePath;

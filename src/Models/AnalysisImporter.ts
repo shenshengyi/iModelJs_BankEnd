@@ -416,6 +416,7 @@ export class AnalysisImporter {
       { color: ColorDef.black.tbgr, fill: ColorDef.blue.tbgr }
     );
 
+    /*输入一个表示悬臂梁的多边形面和应力和位移数据。*/
     /** import a polyface representing a cantilever beam with stress and displacement data. */
     const importedPolyface = this.importPolyfaceFromJson("Cantilever.json");
     /** create a model containing the imported data (with display styles, views etc.) */
