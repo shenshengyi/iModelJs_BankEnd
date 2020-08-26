@@ -7,7 +7,11 @@ import { onAnyKey } from "onAnyKey";
 import { IModelHost, ClassRegistry } from "@bentley/imodeljs-backend";
 import { SnapshotDbExample_Handle } from "./DB_File/SnapshotDbExample";
 import { TestSchema_Handle } from "./DB_File/TestSchema";
-import { IModelTransformer_Handle } from "./DB_File/IModelTransformerTest";
+import {
+  IModelTransformer_IModelImporter,
+  IModelTransformer_Handle,
+  IModelTransformer_Handle2,
+} from "./DB_File/IModelTransformerTest";
 class MM {
   public constructor() {
     console.log("开始");
@@ -22,7 +26,7 @@ async function APP() {
   await IModelHost.startup();
   // await SnapshotDbExample_Handle();
   //await TestSchema_Handle();
-  await IModelTransformer_Handle();
+  await IModelTransformer_Handle2();
   // await Handle_StandaloneDbTest();
   //await Handle_BriefcaseDbTest();
   // await Handle_SnapshotDbTest();
