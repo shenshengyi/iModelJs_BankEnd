@@ -12,6 +12,8 @@ import {
   DisplayStyle3d,
   CategorySelector,
   OrthographicViewDefinition,
+  Schemas,
+  Schema,
 } from "@bentley/imodeljs-backend";
 import { Id64String, Id64Array } from "@bentley/bentleyjs-core";
 import {
@@ -66,6 +68,22 @@ class TestSchema {
     let imodel = this._imodel;
     imodel.importSchemas(this.requestContext, [schemaPath]);
 
+    const versinon = imodel.querySchemaVersion("RobotWorld");
+    if (versinon) {
+      console.log("版本=" + versinon);
+    }
+    imodel.nativeDb.exportSchemas("D:/schema/");
+    // const rr = imodel.nativeDb.getSchema("RobotWorld");
+    // console.log(rr.result);
+    // const result = JSON.parse(rr.result!);
+    // console.log(result);
+    // exportSchemas(exportDirectory: string): DbResult;
+
+    // const schema = Schemas.getRegisteredSchema("RobotWorld");
+    // if (schema) {
+    //   console.log("shcema");
+    //   console.log(schema);
+    // }
     //插入一个物理模型并将其命名为My_PhysicalModel，将其作为后面新增Element的容器。
     const MyPhysicalModelId = PhysicalModel.insert(
       imodel,

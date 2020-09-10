@@ -12,6 +12,7 @@ import {
   IModelTransformer_Handle,
   IModelTransformer_Handle2,
 } from "./DB_File/IModelTransformerTest";
+import { ImportAndExportSchema_Handle } from "./DB_File/IMportAndExportSchema";
 class MM {
   public constructor() {
     console.log("开始");
@@ -25,12 +26,12 @@ async function APP() {
   // Start the backend
   await IModelHost.startup();
   // await SnapshotDbExample_Handle();
-  //await TestSchema_Handle();
-  await IModelTransformer_Handle2();
+  await TestSchema_Handle();
+  // await IModelTransformer_Handle2();
   // await Handle_StandaloneDbTest();
   //await Handle_BriefcaseDbTest();
   // await Handle_SnapshotDbTest();
-
+  await ImportAndExportSchema_Handle();
   //await TestAnalySis();
   // Handle_PhysicalMaterialTest();
   IModelHost.shutdown();
