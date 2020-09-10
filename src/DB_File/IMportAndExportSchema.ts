@@ -43,6 +43,15 @@ class ImportAndExportSchema {
       this._imodel.close();
     }
   }
+  public InspectSchema(schemaName: string) {
+    if (this._imodel === undefined) {
+      return;
+    }
+    const versinon = this._imodel.querySchemaVersion(schemaName);
+    if (versinon) {
+      console.log("版本=" + versinon);
+    }
+  }
   private requestContext = new BackendRequestContext();
   private _imodel: SnapshotDb | undefined;
 }
@@ -54,6 +63,7 @@ export async function ImportAndExportSchema_Handle() {
   example.CreateIModelFromSeed(seedFileName, testFileName);
   const schemaPath = "./data/RobotWorld.ecschema.xml";
   await example.ImportSchema(schemaPath);
+  example.InspectSchema("RobotWorld");
   const SaveSchemaFilePath = "D:/schema/";
   await example.ExportEchema(SaveSchemaFilePath);
   example.dispose();
